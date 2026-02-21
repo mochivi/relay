@@ -1,0 +1,25 @@
+global:
+  addr: "0.0.0.0"
+  port: 8080
+
+services:
+  - name: api
+    algorithm: round_robin
+    backends:
+      - http://localhost:3001
+      - http://localhost:3002
+      - http://localhost:3003
+
+  - name: admin
+    algorithm: round_robin
+    backends:
+      - http://localhost:4000
+      - http://localhost:4001
+
+
+routes:
+  - path: /
+    service: api
+
+  - path: /admin
+    service: admin

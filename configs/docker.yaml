@@ -1,0 +1,23 @@
+global:
+  addr: "0.0.0.0"
+  port: 8080
+
+services:
+  - name: api
+    algorithm: round_robin
+    backends:
+      - http://api1:3001
+      - http://api2:3001
+      - http://api3:3001
+
+  - name: admin
+    algorithm: round_robin
+    backends:
+      - http://admin1:4000
+      - http://admin2:4001
+
+routes:
+  - path: /
+    service: api
+  - path: /admin
+    service: admin

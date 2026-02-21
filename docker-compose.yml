@@ -1,0 +1,78 @@
+services:
+  relay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      CONFIG_PATH: /app/configs/docker.yaml
+    volumes:
+      - ./configs:/app/configs:ro
+    depends_on:
+      - api1
+      - api2
+      - api3
+      - admin1
+      - admin2
+    networks:
+      - relay
+
+  api1:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      PORT: "3001"
+      ROUTE: "/"
+      SERVICE_NAME: api
+    networks:
+      - relay
+
+  api2:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      PORT: "3001"
+      ROUTE: "/"
+      SERVICE_NAME: api
+    networks:
+      - relay
+
+  api3:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      PORT: "3001"
+      ROUTE: "/"
+      SERVICE_NAME: api
+    networks:
+      - relay
+
+  admin1:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      PORT: "4000"
+      ROUTE: "/admin"
+      SERVICE_NAME: admin
+    networks:
+      - relay
+
+  admin2:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      PORT: "4001"
+      ROUTE: "/admin"
+      SERVICE_NAME: admin
+    networks:
+      - relay
+
+networks:
+  relay:
+    driver: bridge
