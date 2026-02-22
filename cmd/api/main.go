@@ -1,12 +1,23 @@
 package main
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"log"
+	"math/big"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
+
+func mustHostname() string {
+	h, _ := os.Hostname()
+	if h == "" {
+		return "unknown"
+	}
+	return h
+}
 
 // API for testing proxy
 func main() {
@@ -30,6 +41,9 @@ func main() {
 	}
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		randint_64, _ := rand.Int(rand.Reader, big.NewInt(1000))
+		time.Sleep(time.Duration(int(randint_64.Int64())) * time.Millisecond)
+
 		path := r.URL.Path
 		// Route "/" means catch-all: serve every path
 		if route != "/" {
@@ -44,6 +58,7 @@ func main() {
 			"service": serviceName,
 			"route":   route,
 			"path":    path,
+			"host":    mustHostname(), // identifies instance when multiple backends use same port (e.g. api1:3001, api2:3001)
 		}
 		_ = json.NewEncoder(w).Encode(body)
 	})

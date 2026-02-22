@@ -4,7 +4,7 @@ global:
 
 services:
   - name: api
-    algorithm: round_robin
+    algorithm: least_connections
     backends:
       - http://api1:3001
       - http://api2:3001

@@ -12,7 +12,7 @@ type Service struct {
 }
 
 func NewService(cfg config.ServiceConfig) (*Service, error) {
-	backends := make([]backend.Backend, 0, len(cfg.Backends))
+	backends := make([]*backend.Backend, 0, len(cfg.Backends))
 	for _, rawBackend := range cfg.Backends {
 		backend, err := backend.NewBackend(rawBackend, 1)
 		if err != nil {

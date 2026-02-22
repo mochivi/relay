@@ -7,14 +7,16 @@ import (
 )
 
 type Balancer interface {
-	Next() backend.Backend
+	Next() *backend.Backend
 	Algorithm() string
 }
 
-func NewBalancer(algorithm string, backends []backend.Backend) (Balancer, error) {
+func NewBalancer(algorithm string, backends []*backend.Backend) (Balancer, error) {
 	switch algorithm {
 	case "round_robin":
 		return &RoundRobinBalancer{backends: backends}, nil
+	case "least_connections":
+		return &LeastConnectionsBalancer{backends: backends}, nil
 	}
 	return nil, errors.New("algorithm not supported")
 }

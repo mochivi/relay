@@ -19,6 +19,7 @@ services:
       - relay
 
   api1:
+    hostname: api1
     build:
       context: .
       dockerfile: Dockerfile.api
@@ -30,6 +31,7 @@ services:
       - relay
 
   api2:
+    hostname: api2
     build:
       context: .
       dockerfile: Dockerfile.api
@@ -41,6 +43,7 @@ services:
       - relay
 
   api3:
+    hostname: api3
     build:
       context: .
       dockerfile: Dockerfile.api
@@ -52,6 +55,7 @@ services:
       - relay
 
   admin1:
+    hostname: admin1
     build:
       context: .
       dockerfile: Dockerfile.api
@@ -63,6 +67,7 @@ services:
       - relay
 
   admin2:
+    hostname: admin2
     build:
       context: .
       dockerfile: Dockerfile.api

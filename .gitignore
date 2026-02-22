@@ -30,6 +30,8 @@ vendor/
 .env.*.local
 *.pem
 
+**.venv
+
 # IDE and editors
 .idea/
 *.swp

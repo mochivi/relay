@@ -1,21 +1,33 @@
 package balancer
 
-import "github.com/mochivi/relay/internal/backend"
+import (
+	"sync"
+
+	"github.com/mochivi/relay/internal/backend"
+)
 
 type RoundRobinBalancer struct {
-	backends []backend.Backend
+	backends []*backend.Backend
+	mux      sync.Mutex
 	index    int
 }
 
-func (r *RoundRobinBalancer) Next() backend.Backend {
-	if r.index == len(r.backends) {
-		r.index = 0
+func (b *RoundRobinBalancer) Next() *backend.Backend {
+	b.mux.Lock()
+	defer b.mux.Unlock()
+
+	if len(b.backends) == 0 {
+		return nil
 	}
-	backend := r.backends[r.index]
-	r.index++
+	if b.index == len(b.backends) {
+		b.index = 0
+	}
+	backend := b.backends[b.index]
+	b.index++
+	backend.Connections.Add(1)
 	return backend
 }
 
-func (r *RoundRobinBalancer) Algorithm() string {
+func (b *RoundRobinBalancer) Algorithm() string {
 	return "round_robin"
 }

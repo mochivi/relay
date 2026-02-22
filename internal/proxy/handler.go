@@ -11,11 +11,15 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		http.NotFound(w, req)
 		return
 	}
-	next := service.Balancer.Next()
+	backend := service.Balancer.Next()
+	if backend == nil {
+		return
+	}
+	defer backend.Connections.Add(-1)
 
 	revProxy := httputil.ReverseProxy{
 		Rewrite: func(pr *httputil.ProxyRequest) {
-			pr.SetURL(next.URL)
+			pr.SetURL(backend.URL)
 		},
 	}
 	revProxy.ServeHTTP(w, req)

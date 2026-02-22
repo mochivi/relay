@@ -1,5 +1,5 @@
 global:
-  addr: "0.0.0.0"
+  addr: "127.0.0.1"
   port: 8080
 
 services:
@@ -20,6 +20,5 @@ services:
 routes:
   - path: /
     service: api
-
   - path: /admin
     service: admin
