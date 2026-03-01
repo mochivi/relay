@@ -1,6 +1,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/mochivi/relay/internal/backend"
 	"github.com/mochivi/relay/internal/balancer"
 	"github.com/mochivi/relay/internal/config"
@@ -30,4 +32,14 @@ func NewService(cfg config.ServiceConfig) (*Service, error) {
 		Name:     cfg.Name,
 		Balancer: balancer,
 	}, nil
+}
+
+func (s *Service) ServeNext(w http.ResponseWriter, req *http.Request) {
+	backend := s.Balancer.Next()
+	if backend == nil {
+		w.Write([]byte("error")) // temp
+	}
+	defer s.Balancer.Finalize(backend)
+
+	backend.ServeHTTP(w, req)
 }

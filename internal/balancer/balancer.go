@@ -8,6 +8,7 @@ import (
 
 type Balancer interface {
 	Next() *backend.Backend
+	Finalize(*backend.Backend)
 	Algorithm() string
 }
 

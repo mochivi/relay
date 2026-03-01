@@ -2,7 +2,6 @@ package proxy
 
 import (
 	"net/http"
-	"net/http/httputil"
 )
 
 func (p *Proxy) ServeHTTP(w http.ResponseWriter, req *http.Request) {
@@ -11,16 +10,5 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		http.NotFound(w, req)
 		return
 	}
-	backend := service.Balancer.Next()
-	if backend == nil {
-		return
-	}
-	defer backend.Connections.Add(-1)
-
-	revProxy := httputil.ReverseProxy{
-		Rewrite: func(pr *httputil.ProxyRequest) {
-			pr.SetURL(backend.URL)
-		},
-	}
-	revProxy.ServeHTTP(w, req)
+	service.ServeNext(w, req)
 }

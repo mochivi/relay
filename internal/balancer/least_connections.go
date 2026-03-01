@@ -32,6 +32,10 @@ func (b *LeastConnectionsBalancer) Next() *backend.Backend {
 	return b.backends[selected]
 }
 
+func (b *LeastConnectionsBalancer) Finalize(backend *backend.Backend) {
+	backend.Connections.Add(-1)
+}
+
 func (b *LeastConnectionsBalancer) Algorithm() string {
 	return "least_connections"
 }

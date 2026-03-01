@@ -28,6 +28,10 @@ func (b *RoundRobinBalancer) Next() *backend.Backend {
 	return backend
 }
 
+func (b *RoundRobinBalancer) Finalize(backend *backend.Backend) {
+	backend.Connections.Add(-1)
+}
+
 func (b *RoundRobinBalancer) Algorithm() string {
 	return "round_robin"
 }
